@@ -17,6 +17,7 @@ const GetUsers = () => {
         <Fragment>
   <div className="container">
   <h2 className="table mt-5">User Table</h2> 
+  <h2 className="table mt-5">Love you</h2> 
   <table className="table mt-5">
     <thead>
       <tr>
