@@ -1,5 +1,4 @@
 import './App.css';
-import GetUsers from './components/GetUsers';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LocalPage from './LocalPage';
 

@@ -26,7 +26,7 @@ const LocalPage = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div className="container-fluid">
           {/* Brand Logo */}
-          <a className="navbar-brand text-white fs-2" style={{ fontFamily: "'Times New Roman'" }} href="#">
+          <a className="navbar-brand text-white fs-2" style={{ fontFamily: "'Times New Roman'" }} >
             <img src={formLogo} alt="logo" width="60" height="auto" className="d-inline-block align-text-top" />
             FFA Form
           </a>
@@ -51,7 +51,7 @@ const LocalPage = () => {
               <li className="nav-item">
                 <a
                   className={`nav-link ${activeLink === 'home' ? 'active' : ''}`}
-                  href="#"
+                 
                   onClick={() => handleLinkClick('home')}
                 >
                   Home
@@ -60,7 +60,7 @@ const LocalPage = () => {
               <li className="nav-item">
                 <a
                   className={`nav-link ${activeLink === 'about' ? 'active' : ''}`}
-                  href="#"
+  
                   onClick={() => handleLinkClick('about')}
                 >
                   About
