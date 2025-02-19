@@ -26,8 +26,18 @@ const LocalPage = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div className="container-fluid">
           {/* Brand Logo */}
-          <a className="navbar-brand text-white fs-2" style={{ fontFamily: "'Times New Roman'" }} >
-            <img src={formLogo} alt="logo" width="60" height="auto" className="d-inline-block align-text-top" />
+          <a
+            href="/"
+            className="navbar-brand text-white fs-2"
+            style={{ fontFamily: "'Times New Roman'" }}
+          >
+            <img
+              src={formLogo}
+              alt="logo"
+              width="60"
+              height="auto"
+              className="d-inline-block align-text-top"
+            />
             FFA Form
           </a>
 
@@ -50,8 +60,8 @@ const LocalPage = () => {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <a
+                  href="#home"
                   className={`nav-link ${activeLink === 'home' ? 'active' : ''}`}
-                 
                   onClick={() => handleLinkClick('home')}
                 >
                   Home
@@ -59,8 +69,8 @@ const LocalPage = () => {
               </li>
               <li className="nav-item">
                 <a
+                  href="#about"
                   className={`nav-link ${activeLink === 'about' ? 'active' : ''}`}
-  
                   onClick={() => handleLinkClick('about')}
                 >
                   About
@@ -70,13 +80,26 @@ const LocalPage = () => {
 
             {/* Search Form */}
             <form className="d-flex">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button className="btn btn-outline-light" type="submit">Search</button>
+              <input
+                className="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button className="btn btn-outline-light" type="submit">
+                Search
+              </button>
             </form>
 
             {/* Login & Register Buttons */}
             <div className="d-flex ms-lg-3">
-              <button className="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+              <button
+                className="btn btn-outline-light me-2"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+              >
+                Login
+              </button>
               <button className="btn btn-outline-light">Register</button>
             </div>
           </div>
@@ -84,7 +107,10 @@ const LocalPage = () => {
       </nav>
 
       {/* Main Body */}
-      <div className="container mt-5 pt-5 bg-light" style={{ minHeight: '100vh', paddingTop: '4rem' }}>
+      <div
+        className="container mt-5 pt-5 bg-light"
+        style={{ minHeight: '100vh', paddingTop: '4rem' }}
+      >
         <div className="row justify-content-center">
           <div className="col-lg-6 col-md-8 col-sm-10">
             {/* Form Card */}
@@ -96,18 +122,41 @@ const LocalPage = () => {
                 {activeLink === 'home' && (
                   <form>
                     <div className="mb-3">
-                      <label htmlFor="name" className="form-label">Name</label>
-                      <input type="text" className="form-control" id="name" placeholder="Enter your name" />
+                      <label htmlFor="name" className="form-label">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="name"
+                        placeholder="Enter your name"
+                      />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="email" className="form-label">Email</label>
-                      <input type="email" className="form-control" id="email" placeholder="Enter your email" />
+                      <label htmlFor="email" className="form-label">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        placeholder="Enter your email"
+                      />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="message" className="form-label">Message</label>
-                      <textarea className="form-control" id="message" rows="3" placeholder="Enter your message"></textarea>
+                      <label htmlFor="message" className="form-label">
+                        Message
+                      </label>
+                      <textarea
+                        className="form-control"
+                        id="message"
+                        rows="3"
+                        placeholder="Enter your message"
+                      ></textarea>
                     </div>
-                    <button type="submit" className="btn btn-primary w-100">Submit</button>
+                    <button type="submit" className="btn btn-primary w-100">
+                      Submit
+                    </button>
                   </form>
                 )}
                 {activeLink === 'about' && <GetUsers />}
@@ -118,17 +167,32 @@ const LocalPage = () => {
       </div>
 
       {/* Login Modal */}
-      <div className="modal fade" id="loginModal" tabIndex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div
+        className="modal fade"
+        id="loginModal"
+        tabIndex="-1"
+        aria-labelledby="loginModalLabel"
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="loginModalLabel">Login</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 className="modal-title" id="loginModalLabel">
+                Login
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               <form onSubmit={handleLoginSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="username" className="form-label">Username</label>
+                  <label htmlFor="username" className="form-label">
+                    Username
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -140,7 +204,9 @@ const LocalPage = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Password</label>
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
                   <input
                     type="password"
                     className="form-control"
@@ -151,7 +217,9 @@ const LocalPage = () => {
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary w-100">Login</button>
+                <button type="submit" className="btn btn-primary w-100">
+                  Login
+                </button>
               </form>
             </div>
           </div>
@@ -162,4 +230,5 @@ const LocalPage = () => {
 };
 
 export default LocalPage;
+
 
