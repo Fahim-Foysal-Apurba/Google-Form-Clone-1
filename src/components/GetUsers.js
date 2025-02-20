@@ -3,7 +3,7 @@ import { useState, useEffect, Fragment } from 'react';
 const GetUsers = () => {
 
     const [user, setUser]= useState([]);
-
+    //https://google-form-clone-wck5.onrender.com/getUsers
     const getData= async()=>{
          const res=await fetch(`https://google-form-clone-wck5.onrender.com/getUsers`)
          const jsRes=await res.json();
