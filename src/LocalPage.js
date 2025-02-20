@@ -1,7 +1,7 @@
 import GetUsers from "./components/GetUsers";
 import LoginPage from "./components/login";
 import TemplateCards from "./components/templateCards";
-import LocalNavHeader, { activeLink } from "./components/localNavHeader";
+import LocalNavHeader from "./components/localNavHeader";
 import { useState } from "react";
 import RegisterPage from "./components/register";
 
