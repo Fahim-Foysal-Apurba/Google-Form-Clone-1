@@ -54,7 +54,7 @@ const FormTem = ({ id, email, name, role, mode, setMode }) => {
         alert("Form Created Successfully!");
         document.body.classList.remove("modal-open");
         document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
-        document.body.style.overflow = "auto"; 
+        //document.body.style.overflow = "auto"; 
       } else {
         alert("Error creating form");
       }
@@ -145,7 +145,7 @@ const FormTem = ({ id, email, name, role, mode, setMode }) => {
                   <button onClick={addQuestion} className="btn btn-outline-light btn-info w-100">
                     + Add Question
                   </button><br /><br />
-                 { id && ( <button onClick={handleSubmit} className="btn btn-outline-light btn-success d-flex">
+                 { id && ( <button onClick={handleSubmit} className="btn btn-close btn-outline-light btn-success d-flex">
                     Submit Form
                   </button>)}
                   {!id && (<h5 className="my-4 text-muted"> You cannot create a form without being a registered user.

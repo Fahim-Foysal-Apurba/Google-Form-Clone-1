@@ -62,7 +62,7 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
 
     return (
         <div className="container mt-5">
-            <div className="row justify-content-center">
+            <div className="row d-flex justify-content-center">
                 
 
                             <table className="table table-striped table-bordered table-hover ">
