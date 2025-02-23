@@ -52,6 +52,9 @@ const FormTem = ({ id, email, name, role, mode, setMode }) => {
 
       if (response.ok) {
         alert("Form Created Successfully!");
+        document.body.classList.remove("modal-open");
+        document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
+        document.body.style.overflow = "auto"; 
       } else {
         alert("Error creating form");
       }
