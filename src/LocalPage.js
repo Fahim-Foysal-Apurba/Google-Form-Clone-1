@@ -119,7 +119,7 @@ const LocalPage = () => {
                 ) : (  
 
             <table className="table table-bordered table-striped table-hover ">
-                        <thead className="table-dark text-center">
+                        <thead className="table-warning text-center">
                             <tr>
                                 
                                 <th>Title</th>
