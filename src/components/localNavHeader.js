@@ -6,7 +6,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost:5000/logout', {
+            const response = await fetch('https://google-form-clone-wck5.onrender.com/logout', {
                 method: 'POST',
                 credentials: 'include',  // Important: ensures cookies are included
             });
