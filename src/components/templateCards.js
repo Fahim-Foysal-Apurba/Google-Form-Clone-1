@@ -1,11 +1,20 @@
 import customTemImg from '../image/layout.png';
-const TemplateCards = () => {
+import FormTem from './form.js';
+
+
+
+const TemplateCards = ({ id, email, name, role, mode, setMode }) => {
+
+
+
+
     return (
+      <div className="card">
 <div
   className="card shadow-lg bg-light rounded border border-light"
   style={{
-    width: "100%", // Makes it flexible and responsive
-    maxWidth: "200px", // Maximum width for larger screens
+    width: "100%", 
+    maxWidth: "200px", 
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
   }}
   onMouseEnter={(e) => {
@@ -17,7 +26,8 @@ const TemplateCards = () => {
     e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
   }}
 >
-  <a href="/" className="d-flex justify-content-center">
+  <button className='btn btn-otline-light d-flex justify-content-center '>
+     <div className='p-1'>
     <img
       src={customTemImg}
       className="card-img-top p-3"
@@ -27,9 +37,15 @@ const TemplateCards = () => {
         height: "140px",
         objectFit: "cover", // Ensures the image scales properly
       }}
+        data-bs-toggle="modal"
+        data-bs-target="#formModal"
       alt="custom template"
     />
-  </a>
+    
+    
+    
+ 
+  
   <div
     className="card-body text-center"
     style={{
@@ -37,11 +53,24 @@ const TemplateCards = () => {
       height: "auto", // Removed fixed height
     }}
   >
+
     <h5 className="card-title" style={{ fontSize: "16px" }}> {/* Reduced font size for better fit */}
-      Custom Template
+      custom template
     </h5>
   </div>
+  </div>
+  </button>
+  </div>
+  
+
+<FormTem id={id} name={name} email={email} role={role} mode={mode} setMode={setMode} />
+
+
+
+
 </div>
+
+
 
     );
   };
@@ -50,3 +79,9 @@ const TemplateCards = () => {
   
  
 export default TemplateCards;
+
+
+
+
+
+

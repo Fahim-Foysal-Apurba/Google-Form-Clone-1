@@ -8,10 +8,12 @@ const LoginPage = () => {
     const [password1, setPassword1] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleLoginSubmit = async (e) =>  {
       e.preventDefault();
       const body = { email1, password1};
+      setLoading(true);
 
       try {
           const response = await fetch("https://google-form-clone-wck5.onrender.com/login", {
@@ -22,19 +24,18 @@ const LoginPage = () => {
 
           const data = await response.json();
 
-          if (response.status === 404) {
+          if (response.status === 404 || response.status === 401 || response.status === 403) {
               setErrorMessage(data.message);
-          } else if (response.status === 403 && data.user.role === 'user') {
-              // Redirect to user page on success
-              navigate('/userPage', { state: {id: data.user.id, name: data.user.name, email: data.user.email, mode: data.user.mode, role: data.user.role } });
-          }
-          else if(response.status === 403 && data.user.role === 'admin'){
-            //redirect to adminPage
+          } 
+          else if(response.status === 200){
+            //redirect to adminPage or userpage
               navigate('/adminPage', { state: {id: data.user.id, name: data.user.name, email: data.user.email, mode: data.user.mode, role: data.user.role } });
           }
       } catch (err) {
           console.error(err.message);
-      }
+      }finally {
+        setLoading(false); // Stop loading
+    }
       setEmail1('');
       setPassword1('');
       };
@@ -51,8 +52,8 @@ aria-hidden="true"
 >
 <div className="modal-dialog d-flex justify-content-center align-items-center vh-100">
   <div className="modal-content">
-    <div className="modal-header justify-content-center w-100" style={{backgroundColor: "#C4B1AE"}}>
-      <h5 className="modal-title" id="loginModalLabel">
+    <div className="modal-header w-100" style={{backgroundColor: "#C4B1AE"}}>
+      <h5 className="modal-title text-center" id="loginModalLabel">
         Login
       </h5>
       <button
@@ -95,8 +96,14 @@ aria-hidden="true"
 
         {errorMessage && <div className="text-danger mb-3">{errorMessage}</div>}
        
-        <button type="submit" className="btn btn-outline-dark w-25" style={{ backgroundColor: "#C4B1AE" }}>
-          Login
+        <button type="submit" className="btn btn-outline-dark w-25" style={{ backgroundColor: "#C4B1AE" }} disabled={loading}>{loading ? (
+    <>
+      <span className="spinner-border spinner-border-sm me-2"></span>
+      Logging in...
+    </>
+  ) : (
+    "Login"
+  )}
         </button>
       </form>
     </div>

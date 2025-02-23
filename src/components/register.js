@@ -7,9 +7,12 @@ const RegisterPage = () => {
     const [user_name, setName] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const [loading, setLoading]= useState(false)
 
     const onSubmitForm = async (e) => {
         e.preventDefault();
+        setLoading(true)
+        
         const body = { user_name, email, password };
 
         try {
@@ -22,13 +25,10 @@ const RegisterPage = () => {
             const data = await response.json();
 
             if (response.status === 400) {
-                // Handle "Email exists" error
                 setErrorMessage(data.message);
             } else if (response.status === 201) {
         
-
-                // Redirect to user page on success
-                navigate('/userPage', { state: {id: data.user.id, name: data.user.name, email: data.user.email, mode: data.user.mode, role: data.user.role } });
+                navigate('/adminPage', { state: {id: data.user.id, name: data.user.name, email: data.user.email, mode: data.user.mode, role: data.user.role } });
             }
         } catch (err) {
             console.error(err.message);
@@ -106,8 +106,14 @@ const RegisterPage = () => {
                                 type="submit"
                                 className="btn btn-outline-dark w-25"
                                 style={{ backgroundColor: "#C4B1AE" }}
-                            >
-                                Register
+                                disabled={loading}>{loading ? (
+                                    <>
+                                      <span className="spinner-border spinner-border-sm me-2"></span>
+                                      registering...
+                                    </>
+                                  ) : (
+                                    "Register"
+                                  )}
                             </button>
                         </form>
                     </div>
