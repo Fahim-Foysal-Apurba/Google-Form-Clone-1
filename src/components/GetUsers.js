@@ -45,7 +45,7 @@ const GetUsers = ({id, name, mode}) => {
 
     return (
         <div className="container mt-1">
-            <div className="table-responsive ${colorBg}">  
+            <div className="table-responsive">  
                 {loading ? (  
                     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
                         <div className="spinner-border text-danger" role="status">
