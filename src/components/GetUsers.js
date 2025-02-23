@@ -46,7 +46,7 @@ const GetUsers = ({id, name, mode}) => {
 
     return (
         <div className="container mt-1">
-            {mode===false && (<div className="table-responsive">  
+            {mode===false && (<div className={`table-responsive ${colorBg}`}>  
                 {loading ? (  
                     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
                         <div className="spinner-border text-danger" role="status">
