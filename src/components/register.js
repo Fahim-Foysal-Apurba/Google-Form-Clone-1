@@ -26,6 +26,7 @@ const RegisterPage = () => {
 
             if (response.status === 400) {
                 setErrorMessage(data.message);
+                setLoading(false); 
             } else if (response.status === 201) {
         
                 navigate('/adminPage', { state: {id: data.user.id, name: data.user.name, email: data.user.email, mode: data.user.mode, role: data.user.role } });

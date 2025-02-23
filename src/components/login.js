@@ -33,6 +33,7 @@ const LoginPage = () => {
           }
       } catch (err) {
           console.error(err.message);
+          setLoading(false); 
       }finally {
         setLoading(false); // Stop loading
     }
