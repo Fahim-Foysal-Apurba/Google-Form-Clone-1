@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 const GetUsers = ({id, name, mode}) => {
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true); 
+    const c = mode=== false ? "text-light": "text-dark"
    
 
     // Fetch users
@@ -58,7 +59,7 @@ const GetUsers = ({id, name, mode}) => {
                     </div>
                 ) : (  
                     <table className="table table-bordered table-striped table-hover">
-                        <thead className="table-dark text-center">
+                        <thead className={`table-dark text-center ${c}`}>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
