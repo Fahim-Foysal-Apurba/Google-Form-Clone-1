@@ -145,7 +145,7 @@ const FormTem = ({ id, email, name, role, mode, setMode }) => {
                   <button onClick={addQuestion} className="btn btn-outline-light btn-info w-100">
                     + Add Question
                   </button><br /><br />
-                 { id && ( <button onClick={handleSubmit} className="btn btn-close btn-outline-light btn-success d-flex">
+                 { id && ( <button onClick={handleSubmit} className="btn btn-outline-light btn-success d-flex" data-bs-dismiss="modal" aria-label="Close">
                     Submit Form
                   </button>)}
                   {!id && (<h5 className="my-4 text-muted"> You cannot create a form without being a registered user.

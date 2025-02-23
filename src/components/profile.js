@@ -61,8 +61,8 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="row d-flex justify-content-center">
+        <div className="container mt-3">
+            <div className="row container d-flex justify-content-center">
                 
 
                             <table className="table table-striped table-bordered table-hover ">
@@ -83,7 +83,7 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
                                         <td className="fw-bold">Role</td>
                                         <td>{role}</td>
                                         {role === "admin" && (<td><button className="btn btn-outline-dark w-80" onClick={()=>removeAdmin(id)} >remove</button></td>)}
-                                        
+                                        {role === "user" && (<td>-</td>)}
                                     </tr>
                                     <tr style={{ backgroundColor: "#D5DBDB" }}>
                                         <td className="fw-bold">Mode</td>
