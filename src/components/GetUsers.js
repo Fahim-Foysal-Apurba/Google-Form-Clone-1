@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 const GetUsers = ({id, name, mode}) => {
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true); 
-    const colorBg= mode ===false ? "bg-secondary text-light": "bg-light";
    
 
     // Fetch users
@@ -46,7 +45,7 @@ const GetUsers = ({id, name, mode}) => {
 
     return (
         <div className="container mt-1">
-            {mode===false && (<div className={`table-responsive ${colorBg}`}>  
+            <div className="table-responsive ${colorBg}">  
                 {loading ? (  
                     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
                         <div className="spinner-border text-danger" role="status">
@@ -101,7 +100,7 @@ const GetUsers = ({id, name, mode}) => {
                         </tbody>
                     </table>
                 )}
-            </div>)}
+            </div>
         </div>
     );
 };
