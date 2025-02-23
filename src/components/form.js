@@ -122,7 +122,7 @@ const FormTem = ({ id, email, name, role, mode, setMode }) => {
                               />
                               <button
                                 onClick={() => removeOption(index, oIndex)}
-                                className="btn bthoutline-light bth-secondary p-1 rounded"
+                                className="btn btn-outline-light btn-secondary p-1 rounded"
                               >
                                 Remove
                               </button>
