@@ -4,8 +4,19 @@ import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
 import TemplateCards from "./components/templateCards";
 import Profile from "./components/profile";
+import { useNavigate } from "react-router-dom";
 
 const AdminHome = () => {
+
+    const navigate =useNavigate()
+
+    const [copied, setCopied] = useState(false);
+    const handleCopy = (formLink) => {
+      navigator.clipboard.writeText(formLink).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset copied message after 2s
+      });
+    };
 
     const [forms, setForms] =useState([])
     const [loading, setLoading] = useState(false);
@@ -99,13 +110,17 @@ const AdminHome = () => {
                                                 <tr>
                                                     <th>Title</th>
                                                     <th>Link of forms</th>
+                                                    <th>Copy Link</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {forms.map((f) => ( 
                                                     <tr key={f.id}>
                                                         <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
-                                                        <td><a href={`ffa-form.netlify.app/forms/${f.id}`}>{`ffa-form.netlify.app/forms/${f.id}`}</a></td>
+                                                        <td> <button onClick={()=>navigate(`/answerPage/${f.id}`)}>{`https://ffa-form.netlify.app/answerPage/${f.id}`}</button></td>
+                                                        <td>      <button onClick={()=>handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}>
+                                       {copied ? "Copied!" : "Copy Link"}
+                                      </button></td>
                                                     </tr>
                                                 ))}
                                             </tbody>

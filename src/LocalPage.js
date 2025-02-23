@@ -133,8 +133,8 @@ const LocalPage = () => {
                         {forms.map((f)=>( <tr key={f.id}>
                           <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
                     
-                          <td> <button onClick={()=>navigate(`/answerPage/${f.id}`)}>{`ffa-form.netlify.app/answerPage/${f.id}`}</button></td>
-                          <td>      <button onClick={()=>handleCopy(`ffa-form.netlify.app/answerPage/${f.id}`)}>
+                          <td> <button onClick={()=>navigate(`/answerPage/${f.id}`)}>{`https://ffa-form.netlify.app/answerPage/${f.id}`}</button></td>
+                          <td>      <button onClick={()=>handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}>
                                        {copied ? "Copied!" : "Copy Link"}
                                       </button></td>
                           
