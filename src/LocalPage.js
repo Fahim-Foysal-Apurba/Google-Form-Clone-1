@@ -93,6 +93,8 @@ const LocalPage = () => {
           </div>
         </div>)}
         
+
+        { activeLink==='home' && (
         <div className="mt-2 card shadow-lg rounded">
           <div
             className="card-header text-white text-center"
@@ -144,7 +146,7 @@ const LocalPage = () => {
                           </div>
                           
             </div>
-            </div>
+            </div>)}
         
 
         

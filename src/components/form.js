@@ -130,7 +130,7 @@ const FormTem = ({ id, email, name, role, mode, setMode }) => {
                           ))}
                           <button
                             onClick={() => addOption(index)}
-                            className="bg-blue-500 text-white p-1 rounded mt-1"
+                            className="btn btn-outline-light btn-secondary p-1 rounded"
                           >
                             + Add Option
                           </button>

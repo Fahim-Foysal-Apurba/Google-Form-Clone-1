@@ -1,24 +1,22 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
 import TemplateCards from "./components/templateCards";
 import Profile from "./components/profile";
-import { useNavigate } from "react-router-dom";
 
 const AdminHome = () => {
-
-    const navigate =useNavigate()
-
+    const navigate = useNavigate();
     const [copied, setCopied] = useState(false);
+
     const handleCopy = (formLink) => {
-      navigator.clipboard.writeText(formLink).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000); // Reset copied message after 2s
-      });
+        navigator.clipboard.writeText(formLink).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset copied message after 2s
+        });
     };
 
-    const [forms, setForms] =useState([])
+    const [forms, setForms] = useState([]);
     const [loading, setLoading] = useState(false);
     const location = useLocation(); 
     const [activeLink, setActiveLink] = useState("home");
@@ -27,10 +25,11 @@ const AdminHome = () => {
         const storedMode = sessionStorage.getItem("userMode");
         return storedMode ? JSON.parse(storedMode) : false;
     });
-    const id = location.state?.id || sessionStorage.getItem("userId")
-    const name = location.state?.name || sessionStorage.getItem("userName")  
-    const email = location.state?.email || sessionStorage.getItem("userEmail")
-    const role = location.state?.role || sessionStorage.getItem("userRole")
+
+    const id = location.state?.id || sessionStorage.getItem("userId");
+    const name = location.state?.name || sessionStorage.getItem("userName");
+    const email = location.state?.email || sessionStorage.getItem("userEmail");
+    const role = location.state?.role || sessionStorage.getItem("userRole");
 
     useEffect(() => {
         if (id) sessionStorage.setItem("userId", id);
@@ -53,7 +52,7 @@ const AdminHome = () => {
     const getForms = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch(`ffa-form.netlify.app/getForms`);
+            const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
             setForms(jsRes);
         } catch (error) {
@@ -63,13 +62,33 @@ const AdminHome = () => {
         }
     }, []);
 
-    useEffect(()=>{getForms();}, [getForms]);
+    useEffect(() => { getForms(); }, [getForms]);
 
     return (
         <div className={`d-flex flex-column container-fluid mt-5 pt-5 ${containerBgClass}`} style={{ minHeight: "100vh" }}>
             {/* Header Navbar */}
-            { role==="admin" && <LocalNavHeader activeLink={activeLink} setActiveLink={setActiveLink} hidelogin={true} hideitem1={true} hideitem2={false} hideitem3={false} hidelogout={false} />}
-            { role==="user" && <LocalNavHeader activeLink={activeLink} setActiveLink={setActiveLink} hidelogin={true} hideitem1={true} hideitem2={true} hideitem3={false} hidelogout={false} />}
+            {role === "admin" && (
+                <LocalNavHeader 
+                    activeLink={activeLink} 
+                    setActiveLink={setActiveLink} 
+                    hidelogin={true} 
+                    hideitem1={true} 
+                    hideitem2={false} 
+                    hideitem3={false} 
+                    hidelogout={false} 
+                />
+            )}
+            {role === "user" && (
+                <LocalNavHeader 
+                    activeLink={activeLink} 
+                    setActiveLink={setActiveLink} 
+                    hidelogin={true} 
+                    hideitem1={true} 
+                    hideitem2={true} 
+                    hideitem3={false} 
+                    hidelogout={false} 
+                />
+            )}
 
             {/* Main Body */}
             <div className="container-fluid px-3">
@@ -78,17 +97,27 @@ const AdminHome = () => {
                         {/* Form Card */}
                         <div className="card shadow-lg rounded">
                             <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
-                                <h4>{activeLink === "home" && "Templates"}</h4>
-                                <h4>{activeLink === "users" && "User Management"}</h4>
-                                <h4>{activeLink === "profile" && "Profile"}</h4>
+                                <h4>
+                                    {activeLink === "home" && "Templates"}
+                                    {activeLink === "users" && "User Management"}
+                                    {activeLink === "profile" && "Profile"}
+                                </h4>
                             </div>
                             <div className={`card-body d-flex justify-content-center ${conCardClass}`}>
-                                {activeLink === "home" && <TemplateCards id={id} name={name} email={email} mode={mode} role={role} setMode={setMode} />}
-                                {activeLink === "users" && <GetUsers id={id} name={name}  mode={mode}/>}
-                                {activeLink === "profile" && <Profile id={id} name={name} email={email} role={role} mode={mode} setMode={setMode} />}
+                                {activeLink === "home" && (
+                                    <TemplateCards id={id} name={name} email={email} mode={mode} role={role} setMode={setMode} />
+                                )}
+                                {activeLink === "users" && (
+                                    <GetUsers id={id} name={name} mode={mode} />
+                                )}
+                                {activeLink === "profile" && (
+                                    <Profile id={id} name={name} email={email} role={role} mode={mode} setMode={setMode} />
+                                )}
                             </div>
                         </div>
-                        <div className="mt-2 card shadow-lg rounded">
+
+                        {/* Forms Table */}
+                       { activeLink==='home' && (<div className="mt-2 card shadow-lg rounded">
                             <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
                                 <h4>Forms</h4>
                             </div>
@@ -109,7 +138,7 @@ const AdminHome = () => {
                                             <thead className="table-dark text-center">
                                                 <tr>
                                                     <th>Title</th>
-                                                    <th>Link of forms</th>
+                                                    <th>Form Link</th>
                                                     <th>Copy Link</th>
                                                 </tr>
                                             </thead>
@@ -117,10 +146,26 @@ const AdminHome = () => {
                                                 {forms.map((f) => ( 
                                                     <tr key={f.id}>
                                                         <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
-                                                        <td> <button onClick={()=>navigate(`/answerPage/${f.id}`)}>{`https://ffa-form.netlify.app/answerPage/${f.id}`}</button></td>
-                                                        <td>      <button onClick={()=>handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}>
-                                       {copied ? "Copied!" : "Copy Link"}
-                                      </button></td>
+
+                                                        {/* Navigate to Answer Page */}
+                                                        <td>
+                                                            <button 
+                                                                onClick={() => navigate(`/answerPage/${f.id}`)} 
+                                                                className="btn btn-link"
+                                                            >
+                                                                Go to Form
+                                                            </button>
+                                                        </td>
+
+                                                        {/* Copy Link Button */}
+                                                        <td>
+                                                            <button 
+                                                                onClick={() => handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)} 
+                                                                className="btn btn-outline-primary"
+                                                            >
+                                                                {copied ? "Copied!" : "Copy Link"}
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -128,7 +173,7 @@ const AdminHome = () => {
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </div> )} 
                     </div>
                 </div>
             </div>
@@ -137,6 +182,8 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+
+ 
 
 
 
