@@ -58,7 +58,7 @@ const AdminHome = () => {
             const jsRes = await res.json();
             const formData= jsRes.sort((a, b) => b.id - a.id)
             setForms(formData);
-            sessionStorage.setItem('forms', JSON.stringify(formData));
+            //sessionStorage.setItem('forms', JSON.stringify(formData));
 
             const userFormsData = jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id);
             setUserforms(userFormsData);
