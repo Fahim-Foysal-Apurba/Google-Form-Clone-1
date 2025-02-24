@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
@@ -7,26 +7,18 @@ import Profile from "./components/profile";
 import EditForm from "./components/editForm";
 
 const AdminHome = () => {
-    const navigate = useNavigate();
     const [copied, setCopied] = useState(false);
-
-    const handleCopy = (formLink) => {
-        navigator.clipboard.writeText(formLink).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000); // Reset copied message after 2s
-        });
-    };
-
     const [forms, setForms] = useState([]);
-    const [userForms, setUserforms]=useState([]);
+    const [userForms, setUserforms] = useState([]);
     const [loading, setLoading] = useState(false);
-    const location = useLocation(); 
     const [activeLink, setActiveLink] = useState("home");
-
     const [mode, setMode] = useState(() => {
         const storedMode = sessionStorage.getItem("userMode");
         return storedMode ? JSON.parse(storedMode) : false;
     });
+
+    const [selectedFormId, setSelectedFormId] = useState(null);  // Track the selected form for editing
+    const location = useLocation(); 
 
     const id = location.state?.id || sessionStorage.getItem("userId");
     const name = location.state?.name || sessionStorage.getItem("userName");
@@ -39,7 +31,7 @@ const AdminHome = () => {
         if (email) sessionStorage.setItem("userEmail", email);
         if (role) sessionStorage.setItem("userRole", role);
         sessionStorage.setItem("userMode", JSON.stringify(mode));
-    }, [id, name, email, role, mode]); 
+    }, [id, name, email, role, mode]);
 
     const containerBgClass = mode ? "bg-dark text-light" : "bg-light";
     const conCardClass = mode ? "bg-secondary text-light" : "bg-light";
@@ -47,57 +39,56 @@ const AdminHome = () => {
     useEffect(() => {
         document.body.classList.remove("modal-open");
         document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
-        document.body.style.overflow = "auto"; // Enable scrolling
+        document.body.style.overflow = "auto";
     }, []);
 
     // Fetch all forms
     const getForms = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
+            const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);
             const jsRes = await res.json();
             setForms(jsRes.sort((a, b) => b.id - a.id));
-
-            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id))
+            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id));
         } catch (error) {
             console.error("Error fetching forms:", error);
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
     }, [id]);
 
     useEffect(() => { getForms(); }, [getForms]);
 
-    // State to track which form is being edited
-    const [editFormData, setEditFormData] = useState(null);
-
-    const openEditModal = (form) => {
-        setEditFormData(form); // Store form data in state to pass to the modal
+    const handleCopy = (formLink) => {
+        navigator.clipboard.writeText(formLink).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset copied message after 2s
+        });
     };
 
     return (
         <div className={`d-flex flex-column container-fluid mt-5 pt-5 ${containerBgClass}`} style={{ minHeight: "100vh" }}>
             {/* Header Navbar */}
             {role === "admin" && (
-                <LocalNavHeader 
-                    activeLink={activeLink} 
-                    setActiveLink={setActiveLink} 
-                    hidelogin={true} 
-                    hideitem1={true} 
-                    hideitem2={false} 
-                    hideitem3={false} 
-                    hidelogout={false} 
+                <LocalNavHeader
+                    activeLink={activeLink}
+                    setActiveLink={setActiveLink}
+                    hidelogin={true}
+                    hideitem1={true}
+                    hideitem2={false}
+                    hideitem3={false}
+                    hidelogout={false}
                 />
             )}
             {role === "user" && (
-                <LocalNavHeader 
-                    activeLink={activeLink} 
-                    setActiveLink={setActiveLink} 
-                    hidelogin={true} 
-                    hideitem1={true} 
-                    hideitem2={true} 
-                    hideitem3={false} 
-                    hidelogout={false} 
+                <LocalNavHeader
+                    activeLink={activeLink}
+                    setActiveLink={setActiveLink}
+                    hidelogin={true}
+                    hideitem1={true}
+                    hideitem2={true}
+                    hideitem3={false}
+                    hidelogout={false}
                 />
             )}
 
@@ -127,6 +118,7 @@ const AdminHome = () => {
                             </div>
                         </div>
 
+                        {/* Your Forms */}
                         {activeLink === "home" && (
                             <div className="mt-2 card shadow-lg rounded">
                                 <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
@@ -135,7 +127,8 @@ const AdminHome = () => {
                                 <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
                                     {userForms.length > 0 ? (
                                         userForms.map((form) => (
-                                            <div key={form.id} 
+                                            <div
+                                                key={form.id}
                                                 className="card m-2 shadow border-0 rounded"
                                                 style={{
                                                     width: "100%",
@@ -153,9 +146,15 @@ const AdminHome = () => {
                                             >
                                                 <div className="card-body text-center">
                                                     <h5 className="card-title">{form.title}</h5>
+
                                                     {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
-                                                    
-                                                    <button className="btn btn-warning w-100" onClick={() => openEditModal(form)} data-bs-toggle="modal" data-bs-target="#editModal">
+
+                                                    <button
+                                                        className="btn btn-warning w-100"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editModal"
+                                                        onClick={() => setSelectedFormId(form.id)}  // Set the selected form id
+                                                    >
                                                         Update Form
                                                     </button>
                                                 </div>
@@ -168,10 +167,71 @@ const AdminHome = () => {
                             </div>
                         )}
 
-                        {/* Modal for editing form */}
-                        {editFormData && (
-                            <EditForm form={editFormData} setEditFormData={setEditFormData} />
+                        {/* Forms Table */}
+                        {activeLink === "home" && (
+                            <div className="mt-2 card shadow-lg rounded">
+                                <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
+                                    <h4>Forms</h4>
+                                </div>
+                                <div className={`card-body ${conCardClass}`}>
+                                    <div className="table-responsive">
+                                        {loading ? (
+                                            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
+                                                <div className="spinner-border text-danger" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        ) : forms.length === 0 ? (
+                                            <div className="text-center text-muted my-4">
+                                                <h5>No forms found.</h5>
+                                            </div>
+                                        ) : (
+                                            <table className="table table-bordered table-striped table-hover">
+                                                <thead className="table-warning text-center">
+                                                    <tr>
+                                                        <th>Title</th>
+                                                        <th>Form Link</th>
+                                                        <th>Copy Link</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {forms.map((f) => (
+                                                        <tr key={f.id}>
+                                                            <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
+
+                                                            {/* Navigate to Answer Page */}
+                                                            <td>
+                                                                <button
+                                                                    onClick={() => handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}
+                                                                    className="btn btn-outline-primary"
+                                                                >
+                                                                    {copied ? "Copied!" : "Copy Link"}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal for Edit Form */}
+            <div className="modal fade" id="editModal" tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="editModalLabel">Edit Form</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <EditForm form_id={selectedFormId} />  {/* Pass the selected form ID to EditForm */}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -180,6 +240,8 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+
+
 
 
  
