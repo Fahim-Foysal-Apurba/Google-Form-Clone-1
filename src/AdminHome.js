@@ -161,7 +161,7 @@ const AdminHome = () => {
                                                     {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
 
                                                     <button
-                                    className="btn btn-outline-light me-0 me-sm-2 mb-2 mb-sm-0"
+                                    className="btn btn-outline-light btn-warning me-0 me-sm-2 mb-2 mb-sm-0"
                                     data-bs-toggle="modal"
                                     data-bs-target="#editModal"
                                 >
