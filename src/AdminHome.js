@@ -1,5 +1,4 @@
-import { useLocation } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
 import TemplateCards from "./components/templateCards";
@@ -9,7 +8,7 @@ import EditForm from "./components/editForm";
 const AdminHome = () => {
     const [copied, setCopied] = useState(false);
     const [forms, setForms] = useState([]);
-    const [userForms, setUserforms] = useState([]);
+    const [userForms, setUserForms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeLink, setActiveLink] = useState("home");
     const [mode, setMode] = useState(() => {
@@ -17,21 +16,14 @@ const AdminHome = () => {
         return storedMode ? JSON.parse(storedMode) : false;
     });
 
-    const [selectedFormId, setSelectedFormId] = useState(null);  // Track the selected form for editing
-    const location = useLocation(); 
-
-    const id = location.state?.id || sessionStorage.getItem("userId");
-    const name = location.state?.name || sessionStorage.getItem("userName");
-    const email = location.state?.email || sessionStorage.getItem("userEmail");
-    const role = location.state?.role || sessionStorage.getItem("userRole");
+    const id = sessionStorage.getItem("userId");
+    const name = sessionStorage.getItem("userName");
+    const email = sessionStorage.getItem("userEmail");
+    const role = sessionStorage.getItem("userRole");
 
     useEffect(() => {
-        if (id) sessionStorage.setItem("userId", id);
-        if (name) sessionStorage.setItem("userName", name);
-        if (email) sessionStorage.setItem("userEmail", email);
-        if (role) sessionStorage.setItem("userRole", role);
         sessionStorage.setItem("userMode", JSON.stringify(mode));
-    }, [id, name, email, role, mode]);
+    }, [mode]);
 
     const containerBgClass = mode ? "bg-dark text-light" : "bg-light";
     const conCardClass = mode ? "bg-secondary text-light" : "bg-light";
@@ -39,25 +31,28 @@ const AdminHome = () => {
     useEffect(() => {
         document.body.classList.remove("modal-open");
         document.querySelectorAll(".modal-backdrop").forEach((b) => b.remove());
-        document.body.style.overflow = "auto";
+        document.body.style.overflow = "auto"; // Enable scrolling
     }, []);
 
     // Fetch all forms
     const getForms = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);
+            const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
             setForms(jsRes.sort((a, b) => b.id - a.id));
-            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id));
+
+            setUserForms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id));
         } catch (error) {
             console.error("Error fetching forms:", error);
         } finally {
-            setLoading(false);
+            setLoading(false); 
         }
     }, [id]);
 
-    useEffect(() => { getForms(); }, [getForms]);
+    useEffect(() => {
+        getForms();
+    }, [getForms]);
 
     const handleCopy = (formLink) => {
         navigator.clipboard.writeText(formLink).then(() => {
@@ -118,7 +113,6 @@ const AdminHome = () => {
                             </div>
                         </div>
 
-                        {/* Your Forms */}
                         {activeLink === "home" && (
                             <div className="mt-2 card shadow-lg rounded">
                                 <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
@@ -149,14 +143,32 @@ const AdminHome = () => {
 
                                                     {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
 
-                                                    <button
-                                                        className="btn btn-warning w-100"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#editModal"
-                                                        onClick={() => setSelectedFormId(form.id)}  // Set the selected form id
-                                                    >
+                                                    <button className="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target={`#editModal-${form.id}`}>
                                                         Update Form
                                                     </button>
+
+                                                    {/* Modal */}
+                                                    <div
+                                                        className="modal fade"
+                                                        id={`editModal-${form.id}`}
+                                                        tabIndex="-1"
+                                                        aria-labelledby={`editModalLabel-${form.id}`}
+                                                        aria-hidden="true"
+                                                    >
+                                                        <div className="modal-dialog">
+                                                            <div className="modal-content">
+                                                                <div className="modal-header">
+                                                                    <h5 className="modal-title" id={`editModalLabel-${form.id}`}>
+                                                                        Edit Form - {form.title}
+                                                                    </h5>
+                                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div className="modal-body">
+                                                                    <EditForm id={id} form_id={form.id} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))
@@ -176,7 +188,10 @@ const AdminHome = () => {
                                 <div className={`card-body ${conCardClass}`}>
                                     <div className="table-responsive">
                                         {loading ? (
-                                            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
+                                            <div
+                                                className="d-flex justify-content-center align-items-center"
+                                                style={{ minHeight: "250px" }}
+                                            >
                                                 <div className="spinner-border text-danger" role="status">
                                                     <span className="visually-hidden">Loading...</span>
                                                 </div>
@@ -197,12 +212,14 @@ const AdminHome = () => {
                                                 <tbody>
                                                     {forms.map((f) => (
                                                         <tr key={f.id}>
-                                                            <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
-
-                                                            {/* Navigate to Answer Page */}
+                                                            <td className="text-truncate" style={{ maxWidth: "130px" }}>
+                                                                {f.title}
+                                                            </td>
                                                             <td>
                                                                 <button
-                                                                    onClick={() => handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}
+                                                                    onClick={() =>
+                                                                        handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)
+                                                                    }
                                                                     className="btn btn-outline-primary"
                                                                 >
                                                                     {copied ? "Copied!" : "Copy Link"}
@@ -220,26 +237,12 @@ const AdminHome = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Modal for Edit Form */}
-            <div className="modal fade" id="editModal" tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="editModalLabel">Edit Form</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <EditForm form_id={selectedFormId} />  {/* Pass the selected form ID to EditForm */}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };
 
 export default AdminHome;
+
 
 
 
