@@ -39,7 +39,7 @@ const AdminHome = () => {
         if (email) sessionStorage.setItem("userEmail", email);
         if (role) sessionStorage.setItem("userRole", role);
         sessionStorage.setItem("userMode", JSON.stringify(mode));
-    }, [id, name, email, role, mode]); 
+    }, [id, name, email, role, mode]);
 
     const containerBgClass = mode ? "bg-dark text-light" : "bg-light";
     const conCardClass = mode ? "bg-secondary text-light" : "bg-light";
@@ -129,6 +129,7 @@ const AdminHome = () => {
                             </div>
                         </div>
 
+                        {/* User Forms */}
                         {activeLink === "home" && (  
                             <div className="mt-2 card shadow-lg rounded">
                                 <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
@@ -158,11 +159,24 @@ const AdminHome = () => {
 
                                                     {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
 
-                                                    <button className="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#editModal">
+                                                    <button className="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target={`#editModal${form.id}`}>
                                                         Update Form
                                                     </button>
 
-                                                    <EditForm id={id} form_id={form.id} formData={form} />
+                                                    {/* EditForm Modal */}
+                                                    <div className="modal fade" id={`editModal${form.id}`} tabIndex="-1" aria-labelledby={`editModalLabel${form.id}`} aria-hidden="true">
+                                                        <div className="modal-dialog modal-xl">
+                                                            <div className="modal-content">
+                                                                <div className="modal-header bg-warning">
+                                                                    <h5 className="modal-title w-100" id={`editModalLabel${form.id}`}>Edit Form</h5>
+                                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div className="modal-body">
+                                                                    <EditForm id={id} form_id={form.id} formData={form} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))
@@ -241,6 +255,8 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+
+
 
 
 
