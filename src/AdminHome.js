@@ -55,9 +55,9 @@ const AdminHome = () => {
         try {
             const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
-            setForms(jsRes.sort((a, b) => b.id - a.id));
+            setForms(jsRes.sort((a, b) => b.jsRes.id - a.jsRes.id));
 
-            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id))
+            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.jsRes.id - a.jsRes.id))
         } catch (error) {
             console.error("Error fetching forms:", error);
         } finally {
@@ -128,30 +128,32 @@ const AdminHome = () => {
 
                          {/* Form Card */}
                          <div className="mt-2 card shadow-lg rounded">
-                            <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
-                                <h4>
-                                    Your Forms
-                                </h4>
-                            </div>
-                            <div className={`card-body d-flex justify-content-center ${conCardClass}`}>
-                                {activeLink === "home" && (
-                                      <div className="card"> 
-
-<div className="mt-2 card shadow-lg rounded">
     <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
         <h4>Your Forms</h4>
     </div>
     <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
         {activeLink === "home" && forms.length > 0 ? (
             userForms.map((form) => (
-                <div key={form.id} className="card m-2 shadow" style={{ width: "18rem" }}>
-                    <div className="card-body">
-                        <h5 className="card-text">{form.title}</h5>
+                <div key={form.id} 
+                    className="card m-2 shadow border-0 rounded"
+                    style={{
+                        width: "100%",
+                        maxWidth: "250px",
+                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.05)";
+                        e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                    }}
+                >
+                    <div className="card-body text-center">
+                        <h5 className="card-title">{form.title}</h5>
                         
-                        
-                        {copied && <small className="text-success d-block mt-2">Link Copied!</small>}
-                        
-                        <button className="btn btn-warning mt-2" onClick={() => handleUpdateForm(form.id)}>
+                        <button className="btn btn-warning w-100" onClick={() => handleUpdateForm(form.id)}>
                             Update Form
                         </button>
                     </div>
@@ -164,14 +166,8 @@ const AdminHome = () => {
 </div>
 
 
-                                      </div>
-                                )}
 
-                            </div>
-                        </div>
-
-                       
-
+                            
 
                     
 
