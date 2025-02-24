@@ -131,7 +131,7 @@ const AdminHome = () => {
         <h4>Your Forms</h4>
     </div>
     <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
-        {activeLink === "profile" && forms.length > 0 ? (
+        {activeLink === "home" && forms.length > 0 ? (
             userForms.map((form) => (
                 <div key={form.id} 
                     className="card m-2 shadow border-0 rounded"
