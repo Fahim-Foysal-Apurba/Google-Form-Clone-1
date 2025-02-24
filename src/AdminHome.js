@@ -17,6 +17,7 @@ const AdminHome = () => {
     };
 
     const [forms, setForms] = useState([]);
+    const [userForms, setUserforms]=useState([]);
     const [loading, setLoading] = useState(false);
     const location = useLocation(); 
     const [activeLink, setActiveLink] = useState("home");
@@ -54,15 +55,21 @@ const AdminHome = () => {
         try {
             const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
-            setForms(jsRes);
+            setForms(jsRes.sort((a, b) => b.id - a.id));
+
+            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id))
         } catch (error) {
             console.error("Error fetching forms:", error);
         } finally {
             setLoading(false); 
         }
-    }, []);
+    }, [id]);
 
     useEffect(() => { getForms(); }, [getForms]);
+
+    const handleUpdateForm = ()=>{
+
+    }
 
     return (
         <div className={`d-flex flex-column container-fluid mt-5 pt-5 ${containerBgClass}`} style={{ minHeight: "100vh" }}>
@@ -115,6 +122,59 @@ const AdminHome = () => {
                                 )}
                             </div>
                         </div>
+
+
+
+
+                         {/* Form Card */}
+                         <div className="mt-2 card shadow-lg rounded">
+                            <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
+                                <h4>
+                                    Your Forms
+                                </h4>
+                            </div>
+                            <div className={`card-body d-flex justify-content-center ${conCardClass}`}>
+                                {activeLink === "home" && (
+                                      <div className="card"> 
+
+<div className="mt-2 card shadow-lg rounded">
+    <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
+        <h4>Your Forms</h4>
+    </div>
+    <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
+        {activeLink === "home" && forms.length > 0 ? (
+            userForms.map((form) => (
+                <div key={form.id} className="card m-2 shadow" style={{ width: "18rem" }}>
+                    <div className="card-body">
+                        <h5 className="card-text">{form.title}</h5>
+                        
+                        
+                        {copied && <small className="text-success d-block mt-2">Link Copied!</small>}
+                        
+                        <button className="btn btn-warning mt-2" onClick={() => handleUpdateForm(form.id)}>
+                            Update Form
+                        </button>
+                    </div>
+                </div>
+            ))
+        ) : (
+            <p className="text-muted">No forms available.</p>
+        )}
+    </div>
+</div>
+
+
+                                      </div>
+                                )}
+
+                            </div>
+                        </div>
+
+                       
+
+
+                    
+
 
                         {/* Forms Table */}
                        { activeLink==='home' && (<div className="mt-2 card shadow-lg rounded">

@@ -55,7 +55,7 @@ const TemplateCards = ({ id, email, name, role, mode, setMode }) => {
   >
 
     <h5 className="card-title" style={{ fontSize: "16px" }}> {/* Reduced font size for better fit */}
-      custom template
+      Create Form
     </h5>
   </div>
   </div>
