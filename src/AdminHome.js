@@ -68,7 +68,12 @@ const AdminHome = () => {
 
     useEffect(() => { getForms(); }, [getForms]);
 
+    // State to track which form is being edited
+    const [editFormData, setEditFormData] = useState(null);
 
+    const openEditModal = (form) => {
+        setEditFormData(form); // Store form data in state to pass to the modal
+    };
 
     return (
         <div className={`d-flex flex-column container-fluid mt-5 pt-5 ${containerBgClass}`} style={{ minHeight: "100vh" }}>
@@ -122,112 +127,51 @@ const AdminHome = () => {
                             </div>
                         </div>
 
-                        {activeLink === "home" && (  // Ensure activeLink is checked first
-    <div className="mt-2 card shadow-lg rounded">
-        <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
-            <h4>Your Forms</h4>
-        </div>
-        <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
-            {userForms.length > 0 ? (
-                userForms.map((form) => (
-                    <div key={form.id} 
-                        className="card m-2 shadow border-0 rounded"
-                        style={{
-                            width: "100%",
-                            maxWidth: "250px",
-                            transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = "scale(1.05)";
-                            e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = "scale(1)";
-                            e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
-                        }}
-                    >
-                        <div className="card-body text-center">
-                            <h5 className="card-title">{form.title}</h5>
-
-                            {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
-                            
-                            <button className="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#editModal">
-                                 Update Form
-                               </button>
-
-                               <EditForm id={id} form_id={form.id} />
-                        </div>
-                    </div>
-                ))
-            ) : (
-                <p className="text-muted">No forms available.</p>
-            )}
-        </div>
-    </div>
-)}
-
-
-                    
-
-
-                        {/* Forms Table */}
-                       { activeLink==='home' && (<div className="mt-2 card shadow-lg rounded">
-                            <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
-                                <h4>Forms</h4>
-                            </div>
-                            <div className={`card-body ${conCardClass}`}>
-                                <div className="table-responsive">  
-                                    {loading ? (  
-                                        <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
-                                            <div className="spinner-border text-danger" role="status">
-                                                <span className="visually-hidden">Loading...</span>
+                        {activeLink === "home" && (
+                            <div className="mt-2 card shadow-lg rounded">
+                                <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
+                                    <h4>Your Forms</h4>
+                                </div>
+                                <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
+                                    {userForms.length > 0 ? (
+                                        userForms.map((form) => (
+                                            <div key={form.id} 
+                                                className="card m-2 shadow border-0 rounded"
+                                                style={{
+                                                    width: "100%",
+                                                    maxWidth: "250px",
+                                                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.transform = "scale(1.05)";
+                                                    e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.transform = "scale(1)";
+                                                    e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                                                }}
+                                            >
+                                                <div className="card-body text-center">
+                                                    <h5 className="card-title">{form.title}</h5>
+                                                    {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
+                                                    
+                                                    <button className="btn btn-warning w-100" onClick={() => openEditModal(form)} data-bs-toggle="modal" data-bs-target="#editModal">
+                                                        Update Form
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ) : forms.length === 0 ? (  
-                                        <div className="text-center text-muted my-4">
-                                            <h5>No forms found.</h5>
-                                        </div>
-                                    ) : (  
-                                        <table className="table table-bordered table-striped table-hover">
-                                            <thead className="table-warning text-center">
-                                                <tr>
-                                                    <th>Title</th>
-                                                    <th>Form Link</th>
-                                                    <th>Copy Link</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {forms.map((f) => ( 
-                                                    <tr key={f.id}>
-                                                        <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
-
-                                                        {/* Navigate to Answer Page */}
-                                                        <td>
-                                                            <button 
-                                                                onClick={() => navigate(`/answerPage/${f.id}`)} 
-                                                                className="btn btn-link"
-                                                            >
-                                                                Go to Form
-                                                            </button>
-                                                        </td>
-
-                                                        {/* Copy Link Button */}
-                                                        <td>
-                                                            <button 
-                                                                onClick={() => handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)} 
-                                                                className="btn btn-outline-primary"
-                                                            >
-                                                                {copied ? "Copied!" : "Copy Link"}
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                        ))
+                                    ) : (
+                                        <p className="text-muted">No forms available.</p>
                                     )}
                                 </div>
                             </div>
-                        </div> )} 
+                        )}
+
+                        {/* Modal for editing form */}
+                        {editFormData && (
+                            <EditForm form={editFormData} setEditFormData={setEditFormData} />
+                        )}
                     </div>
                 </div>
             </div>
@@ -236,6 +180,7 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+
 
  
 
