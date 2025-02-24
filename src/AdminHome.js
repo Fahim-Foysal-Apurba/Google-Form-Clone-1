@@ -155,8 +155,8 @@ const AdminHome = () => {
                         <button className="btn btn-warning w-100" data-bs-toggle="modal"
                         data-bs-target="#editModal">
                             Update Form
-                            <EditForm id={id} form_id={form.id}/>
                         </button>
+                        <EditForm id={id} form_id={form.id}/>
                     </div>
                 </div>
                 
