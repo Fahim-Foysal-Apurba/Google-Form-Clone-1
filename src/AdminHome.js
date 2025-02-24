@@ -4,7 +4,7 @@ import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
 import TemplateCards from "./components/templateCards";
 import Profile from "./components/profile";
-import EditForm from "./components/editForm";
+//import EditForm from "./components/editForm";
 
 const AdminHome = () => {
     const navigate = useNavigate();
