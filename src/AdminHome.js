@@ -136,7 +136,7 @@ const AdminHome = () => {
             </div>
 
             {/* Display User Forms on Profile Page */}
-            {activeLink === "profile" && (
+            {activeLink === "home" && (
               <div className="mt-2 card shadow-lg rounded">
                 <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
                   <h4>Your Forms</h4>
