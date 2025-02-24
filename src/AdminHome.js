@@ -122,56 +122,50 @@ const AdminHome = () => {
                             </div>
                         </div>
 
-
-
-
-                         {/* Form Card */}
-                         <div className="mt-2 card shadow-lg rounded">
-    <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
-        <h4>Your Forms</h4>
-    </div>
-    <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
-        {activeLink === "home" && forms.length > 0 ? (
-            userForms.map((form) => (
-                <div key={form.id} 
-                    className="card m-2 shadow border-0 rounded"
-                    style={{
-                        width: "100%",
-                        maxWidth: "250px",
-                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "scale(1.05)";
-                        e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                        e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
-                    }}
-                >
-                    <div className="card-body text-center">
-                        <h5 className="card-title">{form.title}</h5>
-                        
-                        <button className="btn btn-warning w-100" data-bs-toggle="modal"
-                        data-bs-target="#editModal">
-                            Update Form
-                        </button>
-                        <EditForm id={id} form_id={form.id}/>
-                    </div>
-                </div>
-                
-            ))
-            ) : (
-            <p className="text-muted">No forms available.</p>
-        )}
+                        {activeLink === "home" && (  // Ensure activeLink is checked first
+    <div className="mt-2 card shadow-lg rounded">
+        <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
+            <h4>Your Forms</h4>
         </div>
-        
-</div>
+        <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
+            {userForms.length > 0 ? (
+                userForms.map((form) => (
+                    <div key={form.id} 
+                        className="card m-2 shadow border-0 rounded"
+                        style={{
+                            width: "100%",
+                            maxWidth: "250px",
+                            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "scale(1.05)";
+                            e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.2)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "scale(1)";
+                            e.currentTarget.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                        }}
+                    >
+                        <div className="card-body text-center">
+                            <h5 className="card-title">{form.title}</h5>
 
-
-
-
+                            {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
                             
+                            <button className="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#editModal">
+                                 Update Form
+                               </button>
+
+                               <EditForm id={id} form_id={form.id} />
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <p className="text-muted">No forms available.</p>
+            )}
+        </div>
+    </div>
+)}
+
 
                     
 
