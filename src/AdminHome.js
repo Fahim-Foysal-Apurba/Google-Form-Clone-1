@@ -121,7 +121,7 @@ const AdminHome = () => {
                             <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
                                 <h4>Forms</h4>
                             </div>
-                            <div className="card-body">
+                            <div className={`card-body ${conCardClass}`}>
                                 <div className="table-responsive">  
                                     {loading ? (  
                                         <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "250px" }}>
