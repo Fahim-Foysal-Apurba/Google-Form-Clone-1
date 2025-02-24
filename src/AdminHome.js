@@ -58,15 +58,24 @@ const AdminHome = () => {
             const jsRes = await res.json();
             setForms(jsRes.sort((a, b) => b.id - a.id));
 
-            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id));
+            const userFormsData = jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id);
+            setUserforms(userFormsData);
+            sessionStorage.setItem('userForms', JSON.stringify(userFormsData)); // Store forms in sessionStorage
         } catch (error) {
             console.error("Error fetching forms:", error);
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
     }, [id]);
 
-    useEffect(() => { getForms(); }, [getForms]);
+    useEffect(() => {
+        const storedForms = sessionStorage.getItem('userForms');
+        if (storedForms) {
+            setUserforms(JSON.parse(storedForms)); // Load forms from sessionStorage if available
+        } else {
+            getForms(); // Otherwise, fetch forms from API
+        }
+    }, [getForms]);
 
     return (
         <div className={`d-flex flex-column container-fluid mt-5 pt-5 ${containerBgClass}`} style={{ minHeight: "100vh" }}>
@@ -153,7 +162,7 @@ const AdminHome = () => {
                                                         Update Form
                                                     </button>
 
-                                                    <EditForm id={id} form_id={form.id} />
+                                                    <EditForm id={id} form_id={form.id} formData={form} />
                                                 </div>
                                             </div>
                                         ))
@@ -232,6 +241,7 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+
 
 
 
