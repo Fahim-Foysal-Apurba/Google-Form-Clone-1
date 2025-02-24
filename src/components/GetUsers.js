@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const GetUsers = ({id, name, mode}) => {
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true); 
-    const c = mode=== false ? "text-light": "text-dark"
+    const c = mode=== false ? "text-dark": "text-light"
    
 
     // Fetch users
@@ -59,7 +59,7 @@ const GetUsers = ({id, name, mode}) => {
                     </div>
                 ) : (  
                     <table className="table table-bordered table-striped table-hover">
-                        <thead className={`table-dark text-center ${c}`}>
+                        <thead className="table-dark text-center">
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
@@ -72,7 +72,7 @@ const GetUsers = ({id, name, mode}) => {
                         </thead>
                         <tbody>
                             {user.map((u) => (
-                                <tr key={u.id} className="text-center">
+                                <tr key={u.id} className={`text-center ${c}`}>
                                     <td>{u.name}</td>
                                     <td className="text-truncate" style={{ maxWidth: "130px" }}>{u.email}</td>
                                     <td>{u.role}</td>

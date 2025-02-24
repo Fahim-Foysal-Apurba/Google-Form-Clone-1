@@ -120,7 +120,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                         </ul>
 
                         {/* Search Form */}
-                        <form className="d-flex w-75 flex-column flex-sm-row mt-lg-0">
+                        <form className="d-flex flex-column w-100 mx-3 flex-sm-row mt-lg-0">
                             <input
                                 className="form-control w-100"
                                 type="search"

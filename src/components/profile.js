@@ -65,7 +65,7 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
             <div className="row container d-flex justify-content-center">
                 
 
-                            <table className="table table-striped table-bordered table-hover ">
+                            <table className="table table-striped table-bordered table-hover d-flex justify-content-center ">
                                 <tbody>
                                     <tr style={{ backgroundColor: "#B2D8D8" }}>
                                         <td className="fw-bold">Name</td>
@@ -74,7 +74,7 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
                                     </tr>
                                     <tr style={{ backgroundColor: "#F4D03F" }}>
                                         <td className="fw-bold">Email</td>
-                                        <td>{email}</td>
+                                        <td className="text-truncate" style={{ maxWidth: "150px" }}>{email}</td>
                                         <td></td>
                     
                                     </tr>
