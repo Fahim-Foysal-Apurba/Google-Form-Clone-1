@@ -134,7 +134,7 @@ const AdminHome = () => {
                                             <h5>No forms found.</h5>
                                         </div>
                                     ) : (  
-                                        <table className={`table table-bordered table-striped table-hover ${conCardClass}`}>
+                                        <table className="table table-bordered table-striped table-hover">
                                             <thead className="table-warning text-center">
                                                 <tr>
                                                     <th>Title</th>
