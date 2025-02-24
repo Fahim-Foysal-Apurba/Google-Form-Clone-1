@@ -4,7 +4,7 @@ import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
 import TemplateCards from "./components/templateCards";
 import Profile from "./components/profile";
-///import EditForm from "./components/editForm";
+import EditForm from "./components/editForm";
 
 const AdminHome = () => {
     const navigate = useNavigate();
@@ -56,7 +56,9 @@ const AdminHome = () => {
         try {
             const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
-            setForms(jsRes.sort((a, b) => b.id - a.id));
+            const formData= jsRes.sort((a, b) => b.id - a.id)
+            setForms(formData);
+            sessionStorage.setItem('forms', JSON.stringify(formData));
 
             const userFormsData = jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id);
             setUserforms(userFormsData);
@@ -129,7 +131,7 @@ const AdminHome = () => {
                             </div>
                         </div>
 
-                        {activeLink === "home" && (  
+                        {activeLink === "profile" && (  
                             <div className="mt-2 card shadow-lg rounded">
                                 <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
                                     <h4>Your Forms</h4>
@@ -158,9 +160,13 @@ const AdminHome = () => {
 
                                                     {copied && <small className="text-success d-block mb-2">Link Copied!</small>}
 
-                                                    <button className="btn btn-warning w-100" >
-                                                        Update Form
-                                                    </button>
+                                                    <button
+                                    className="btn btn-outline-light me-0 me-sm-2 mb-2 mb-sm-0"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editModal"
+                                >
+                                    Update Form
+                                </button>
 
                                                     
                                                 </div>
@@ -172,6 +178,8 @@ const AdminHome = () => {
                                 </div>
                             </div>
                         )}
+
+{<EditForm />}
 
                         {/* Forms Table */}
                         {activeLink === 'home' && (
@@ -233,10 +241,13 @@ const AdminHome = () => {
                                 </div>
                             </div>
                         )}
+                        
                     </div>
+                   
                 </div>
             </div>
         </div>
+    
     );
 };
 
