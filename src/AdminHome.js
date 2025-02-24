@@ -56,7 +56,9 @@ const AdminHome = () => {
         try {
             const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
-            setForms(jsRes.sort((a, b) => b.id - a.id));
+            const formData = jsRes.sort((a, b) => b.id - a.id)
+            setForms(formData);
+            sessionStorage.setItem('forms', JSON.stringify(formData)); 
 
             const userFormsData = jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id);
             setUserforms(userFormsData);
@@ -130,7 +132,7 @@ const AdminHome = () => {
                         </div>
 
                         {/* User Forms */}
-                        {activeLink === "home" && (  
+                        {activeLink === "profile" && (  
                             <div className="mt-2 card shadow-lg rounded">
                                 <div className="card-header text-white text-center" style={{ backgroundColor: "#B0817A" }}>
                                     <h4>Your Forms</h4>
@@ -172,7 +174,7 @@ const AdminHome = () => {
                                                                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
                                                                 <div className="modal-body">
-                                                                    <EditForm id={id} form_id={form.id} formData={form} />
+                                                                    <EditForm form={form} />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -255,6 +257,7 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+
 
 
 
