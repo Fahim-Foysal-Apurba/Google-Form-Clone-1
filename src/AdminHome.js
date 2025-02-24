@@ -179,7 +179,7 @@ const AdminHome = () => {
                             </div>
                         )}
 
-{<EditForm />}
+{/*<EditForm />*/}
 
                         {/* Forms Table */}
                         {activeLink === 'home' && (
