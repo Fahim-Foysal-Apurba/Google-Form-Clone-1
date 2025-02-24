@@ -55,9 +55,9 @@ const AdminHome = () => {
         try {
             const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);  // Ensure the API URL is correct
             const jsRes = await res.json();
-            setForms(jsRes.sort((a, b) => b.jsRes.id - a.jsRes.id));
+            setForms(jsRes.sort((a, b) => b.id - a.id));
 
-            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.jsRes.id - a.jsRes.id))
+            setUserforms(jsRes.filter((f) => f.user_id === id).sort((a, b) => b.id - a.id))
         } catch (error) {
             console.error("Error fetching forms:", error);
         } finally {

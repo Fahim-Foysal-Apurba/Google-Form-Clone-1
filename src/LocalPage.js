@@ -32,7 +32,7 @@ const LocalPage = () => {
           try {
               const res = await fetch(`https://google-form-clone-wck5.onrender.com/getForms`);
               const jsRes = await res.json();
-              setForms(jsRes.sort((a, b) => b.jsRes.id - a.jsRes.id));
+              setForms(jsRes.sort((a, b) => b.id - a.id));
           } catch (error) {
               console.error("Error fetching forms:", error);
           } finally {
