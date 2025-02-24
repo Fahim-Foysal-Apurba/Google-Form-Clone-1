@@ -4,6 +4,7 @@ import GetUsers from "./components/GetUsers";
 import LocalNavHeader from "./components/localNavHeader";
 import TemplateCards from "./components/templateCards";
 import Profile from "./components/profile";
+import EditForm from "./components/editForm";
 
 const AdminHome = () => {
     const navigate = useNavigate();
@@ -67,9 +68,7 @@ const AdminHome = () => {
 
     useEffect(() => { getForms(); }, [getForms]);
 
-    const handleUpdateForm = ()=>{
 
-    }
 
     return (
         <div className={`d-flex flex-column container-fluid mt-5 pt-5 ${containerBgClass}`} style={{ minHeight: "100vh" }}>
@@ -132,7 +131,7 @@ const AdminHome = () => {
         <h4>Your Forms</h4>
     </div>
     <div className={`card-body d-flex flex-wrap justify-content-center ${conCardClass}`}>
-        {activeLink === "home" && forms.length > 0 ? (
+        {activeLink === "profile" && forms.length > 0 ? (
             userForms.map((form) => (
                 <div key={form.id} 
                     className="card m-2 shadow border-0 rounded"
@@ -153,17 +152,22 @@ const AdminHome = () => {
                     <div className="card-body text-center">
                         <h5 className="card-title">{form.title}</h5>
                         
-                        <button className="btn btn-warning w-100" onClick={() => handleUpdateForm(form.id)}>
+                        <button className="btn btn-warning w-100" data-bs-toggle="modal"
+                        data-bs-target="#editModal">
                             Update Form
+                            <EditForm id={id} form_id={form.id}/>
                         </button>
                     </div>
                 </div>
+                
             ))
-        ) : (
+            ) : (
             <p className="text-muted">No forms available.</p>
         )}
-    </div>
+        </div>
+        
 </div>
+
 
 
 
