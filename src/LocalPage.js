@@ -55,7 +55,8 @@ const LocalPage = () => {
         hideitem1={false}
         hideitem2={true}
         hideitem3={true}
-        hidelogout={true}/>
+        hidelogout={true}
+        hideitemUser={true}/>
 
   {/* Main Body */}
   <div
@@ -119,7 +120,7 @@ const LocalPage = () => {
                 ) : (  
 
             <table className="table table-bordered table-striped table-hover ">
-                        <thead className="table-warning text-center">
+                        <thead className="text-center" style={{backgroundColor: "#f3b4a8"}}>
                             <tr>
                                 
                                 <th>Title</th>
@@ -130,13 +131,13 @@ const LocalPage = () => {
                                
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style={{backgroundColor:"#f9ecf2"}}>
 
                         {forms.map((f)=>( <tr key={f.id}>
                           <td className="text-truncate" style={{ maxWidth: "130px" }}>{f.title}</td>
                     
-                          <td> <button onClick={()=>navigate(`/answerPage/${f.id}`)}>{`https://ffa-form.netlify.app/answerPage/${f.id}`}</button></td>
-                          <td>      <button onClick={()=>handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}>
+                          <td> <button className="btn btn-link" onClick={()=>navigate(`/answerPage/${f.id}`)}>{`https://ffa-form.netlify.app/answerPage/${f.id}`}</button></td>
+                          <td>      <button className="btn btn-link btn-sm" onClick={()=>handleCopy(`https://ffa-form.netlify.app/answerPage/${f.id}`)}>
                                        {copied ? "Copied!" : "Copy Link"}
                                       </button></td>
                           

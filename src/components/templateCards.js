@@ -1,9 +1,9 @@
-import customTemImg from '../image/layout.png';
+import customTemImg from '../image/create_form.png';
 import FormTem from './form.js';
 
 
 
-const TemplateCards = ({ id, email, name, role, mode, setMode }) => {
+const TemplateCards = ({ id, email, name, role, mode, setMode, getForms }) => {
 
 
 
@@ -27,14 +27,14 @@ const TemplateCards = ({ id, email, name, role, mode, setMode }) => {
   }}
 >
   <button className='btn btn-otline-light d-flex justify-content-center '>
-     <div className='p-1'>
+     <div>
     <img
       src={customTemImg}
       className="card-img-top p-3"
       style={{
         width: "100%",
-        maxWidth: "140px", // Ensures it scales well on small screens
-        height: "140px",
+        maxWidth: "130px", // Ensures it scales well on small screens
+        maxHeight: "130px",
         objectFit: "cover", // Ensures the image scales properly
       }}
         data-bs-toggle="modal"
@@ -63,7 +63,7 @@ const TemplateCards = ({ id, email, name, role, mode, setMode }) => {
   </div>
   
 
-<FormTem id={id} name={name} email={email} role={role} mode={mode} setMode={setMode} />
+<FormTem id={id} name={name} email={email} role={role} mode={mode} setMode={setMode} getForms={getForms} />
 
 
 

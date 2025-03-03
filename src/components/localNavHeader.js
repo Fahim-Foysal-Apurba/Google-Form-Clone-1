@@ -1,8 +1,10 @@
 import formLogo from '../image/form.png'; 
 import { useNavigate } from 'react-router-dom';
 
-const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hideitem3, hidelogin, hidelogout }) => {
+
+const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hideitem3, hidelogin, hidelogout, hideitemUser, name }) => {
     const navigate = useNavigate();
+
 
     const handleLogout = async () => {
         try {
@@ -31,7 +33,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
         <div className="row">
             <nav
                 className="navbar navbar-expand-lg navbar-dark fixed-top"
-                style={{ backgroundColor: "#C4B1AE" }}
+                style={{ backgroundColor:" #C4B1AE" }}
             >
                 <div className="container-fluid">
                     {/* Brand Logo */}
@@ -70,7 +72,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                             <li className="nav-item">
                                 <a
                                     href="#home"
-                                    className={`nav-link ${activeLink === "home" ? "active" : ""}`}
+                                    className={`nav-link ${activeLink === "home" ? "active bg-warning rounded-3" : ""}`}
                                     style={{ fontFamily: "'Times New Roman'", fontSize: 22 }}
                                     onClick={() => handleLinkClick("home")}
                                 >
@@ -81,7 +83,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                                 <li className="nav-item">
                                     <a
                                         href="#about"
-                                        className={`nav-link ${activeLink === "about" ? "active" : ""}`}
+                                        className={`nav-link ${activeLink === "about" ? "active bg-warning rounded-3" : ""}`}
                                         style={{ fontFamily: "'Times New Roman'", fontSize: 22 }}
                                         onClick={() => handleLinkClick("about")}
                                     >
@@ -93,7 +95,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                                 <li className="nav-item">             
                                     <a
                                         href="#users"
-                                        className={`nav-link ${activeLink === "users" ? "active" : ""}`}
+                                        className={`nav-link ${activeLink === "users" ? "active bg-warning rounded-3" : ""}`}
                                         style={{ fontFamily: "'Times New Roman'", fontSize: 22 }}
                                         onClick={() => handleLinkClick("users")}
                                     >
@@ -107,7 +109,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                               <li className="nav-item">             
                               <a
                                   href="#users"
-                                  className={`nav-link ${activeLink === "profile" ? "active" : ""}`}
+                                  className={`nav-link ${activeLink === "profile" ? "active bg-warning rounded-3" : ""}`}
                                   style={{ fontFamily: "'Times New Roman'", fontSize: 22 }}
                                   onClick={() => handleLinkClick("profile")}
                               >
@@ -140,7 +142,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                         {!hidelogin && (
                             <div className="d-flex flex-column flex-sm-row align-items-center mt-3 mt-lg-0">
                                 <button
-                                    className="btn btn-outline-light me-0 me-sm-2 mb-2 mb-sm-0"
+                                    className="btn btn-link me-0 me-sm-1 mb-2 mb-sm-0"
                                     data-bs-toggle="modal"
                                     data-bs-target="#loginModal"
                                 >
@@ -148,7 +150,7 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                                 </button>
 
                                 <button
-                                    className="btn btn-outline-light"
+                                    className="btn btn-link"
                                     data-bs-toggle="modal"
                                     data-bs-target="#registerModal"
                                 >
@@ -157,15 +159,20 @@ const LocalNavHeader = ({ activeLink, setActiveLink, hideitem1, hideitem2, hidei
                             </div>
                         )}
 
-                        {/* Logout Button */}
+                        {!hideitemUser && ( <div className="d-flex flex-column align-items-center fw-bold">
+                                    <i className="fas fa-user-circle fa-2x mb-2"></i> 
+                                    <span>{name ? name.split(' ')[0]: "Guest"}</span>
+                                  </div>)}
+
                         {!hidelogout && (
-                            <button
-                                className="btn btn-outline-light"
-                                // Removed data-bs-toggle and data-bs-target to avoid Bootstrap modal issues
-                                onClick={handleLogout}
-                            >
-                                Logout
-                            </button>
+
+                           <button
+                           className="btn btn-link btn-sm ms-3" 
+                           onClick={handleLogout}
+                           >
+                           <i className="fa-solid fa-right-from-bracket" style={{fontSize: "30px" }}></i>
+                           logout
+                           </button>
                         )}
                     </div>
                 </div>

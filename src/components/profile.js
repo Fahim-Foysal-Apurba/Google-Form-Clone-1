@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Profile = ({ id, name, email, role, mode, setMode }) => {
+const Profile = ({ id, name, email, role, mode, setMode}) => {
     const [userMode, setUserMode] = useState(mode);
     const navigate = useNavigate();
+    const [user_name, setUserName]= useState(name)
     const handleLogout = async () => {
         try {
             const response = await fetch('https://google-form-clone-wck5.onrender.com/logout', {
@@ -60,53 +61,109 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
         }
     };
 
+
+    const updateName= async()=>{
+
+        const body={id: id, user_name: user_name}
+
+        const response= await fetch('https://google-form-clone-wck5.onrender.com/updateName', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        })
+
+
+
+
+        if(response.ok){
+            const data = await response.json();
+            setUserName(data.name);
+            sessionStorage.setItem("userName", data.name);
+    }
+
+    }
+
+
     return (
         <div className="container mt-3">
             <div className="row container d-flex justify-content-center">
                 
 
-                            <table className="table table-striped table-bordered table-hover d-flex justify-content-center ">
+                            <table className="table table-striped table-bordered table-hover d-flex justify-content-center " style={{ backgroundColor: "#f9ecf2" }}>
                                 <tbody>
-                                    <tr style={{ backgroundColor: "#B2D8D8" }}>
+                                    <tr style={{ backgroundColor: "#f9ecf2" }}>
                                         <td className="fw-bold">Name</td>
-                                        <td>{name}</td>
-                                        <td></td>
+                                        <td>{user_name}</td>
+                                        <td><button type="button" className="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#editModal"><i className="fas fa-edit"></i></button></td>
                                     </tr>
-                                    <tr style={{ backgroundColor: "#F4D03F" }}>
+                                    <tr >
                                         <td className="fw-bold">Email</td>
-                                        <td className="text-truncate" style={{ maxWidth: "150px" }}>{email}</td>
-                                        <td></td>
+                                        <td className="text-truncate" style={{ maxWidth: "350px" }}>{email}</td>
+                                        <td><i className="fas fa-eye"></i></td>
                     
                                     </tr>
                                     
-                                    <tr style={{ backgroundColor: "#F1948A" }}>
+                                    <tr >
                                         <td className="fw-bold">Role</td>
                                         <td>{role}</td>
-                                        {role === "admin" && (<td><button className="btn btn-outline-dark w-80" onClick={()=>removeAdmin(id)} >remove</button></td>)}
+                                        {role === "admin" && (<td><button className="btn btn-outline-dark w-80" onClick={()=>removeAdmin(id)} >  <i className="fas fa-user-minus"></i> </button></td>)}
                                         {role === "user" && (<td>-</td>)}
                                     </tr>
-                                    <tr style={{ backgroundColor: "#D5DBDB" }}>
-                                        <td className="fw-bold">Mode</td>
-                                        <td>{userMode ? "Dark" : "Light"}</td>
-                                        <td>
-                                            {userMode ? (
-                                                <button className="btn btn-outline-light w-80" onClick={() => toggleMode(false)}>
-                                                    Light Mode
-                                                </button>
-                                            ) : (
-                                                <button className="btn btn-outline-dark w-80" onClick={() => toggleMode(true)}>
-                                                    Dark 
-                                                </button>
-                                            )}
-                                        </td>
+                                    <tr >
+                                    <td className="fw-bold">Mode</td>
+                                         <td>{userMode ? "dark" : "light"}</td>
+                                         <td>
+                                             <div className="form-check form-switch">
+                                                 <input 
+                                                  className="form-check-input" 
+                                                  type="checkbox" 
+                                                 id="flexSwitchCheckChecked1" 
+                                                  checked={userMode} 
+                                                  onChange={() => toggleMode(!userMode)} 
+                                                 />
+                                                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked1"></label>
+                                             </div>
+                                         </td>
                                     </tr>
 
                                 </tbody>
                             </table>
+
+
+                          {/*Edit Name Modal window */}
+                           <div className="modal fade" id="editModal" tabIndex="-1" aria-labelledby="editModalLabel">
+                             <div className="modal-dialog">
+                               <div className="modal-content">
+                                 <div className="modal-header" style={{backgroundColor: "#C4B1AE"}} >
+                                   <h5 className="modal-title" id="editModalLabel">Update your Name</h5>
+                                   <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                 </div>
+                                 <div className="modal-body">
+                                       
+                                       <form className="form-control" onSubmit={updateName}>
+
+                                       <input
+                                           type="text"
+                                           className="form-control"
+                                           //id="user_name"
+                                           value={user_name}
+                                           onChange={(e) => setUserName(e.target.value)}
+                                           placeholder="Edit your name"
+                                           required
+                                         />
+
+                                       <button type="submit" className="btn btn-outline-light" data-bs-dismiss="modal" style={{backgroundColor: "#C4B1AE"}}>Update</button>
+                                       </form>
+        ...
+                                 </div>
+
+                               </div>
+                             </div>
+                         </div>
+
+                                
                         </div>
-                   
-               
-          
+                     
         </div>
     );
 };
