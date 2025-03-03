@@ -17,7 +17,7 @@ const GetUsers = ({id, name, mode}) => {
     const getData = async () => {
       try {
         setLoading(true)
-          const response = await fetch('http://localhost:5000/getUsers');
+          const response = await fetch('https://google-form-clone-wck5.onrender.com/getUsers');
   
           if (!response.ok) {
               throw new Error("Network response was not ok");
@@ -46,7 +46,7 @@ const GetUsers = ({id, name, mode}) => {
   const deleteSelection= async (e)=>{
     e.preventDefault()
       const body={selectedItems}
-     const response=await fetch('http://localhost:5000/deleteUser',
+     const response=await fetch('https://google-form-clone-wck5.onrender.com/deleteUser',
       {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -67,7 +67,7 @@ const GetUsers = ({id, name, mode}) => {
 
     const body={selectedItems}
 
-    const response=await fetch('http://localhost:5000/blockUser',{
+    const response=await fetch('https://google-form-clone-wck5.onrender.com/blockUser',{
       method: 'POST',
       headers: {'Content-type': 'application/json'},
       body: JSON.stringify(body)
