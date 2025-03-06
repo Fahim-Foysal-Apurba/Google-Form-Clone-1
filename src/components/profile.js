@@ -8,7 +8,7 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
 
   const handleSalesforceAuth = () => {
     const clientId = '3MVG9dAEux2v1sLvXd6k01hOFrye_dr8gzZFOUArLnSl072UAcfIPYcAOakrrBQydLfMdwPFCEqdR4kD4azYw'
-    const redirectUri = 'https://ffa-form.netlify.app/callback'
+    const redirectUri = 'https://google-form-clone-wck5.onrender.com/oauth/callback'
 
     // Salesforce OAuth authorization URL
     const authUrl = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
