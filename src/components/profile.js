@@ -6,16 +6,48 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
   const navigate = useNavigate();
   const [user_name, setUserName] = useState(name);
 
-  const handleSalesforceAuth = () => {
-    const clientId = '3MVG9dAEux2v1sLvXd6k01hOFrye_dr8gzZFOUArLnSl072UAcfIPYcAOakrrBQydLfMdwPFCEqdR4kD4azYw'
-    const redirectUri = 'https://ffa-form.netlify.app/oauth/callback'
+  // Function to generate the code verifier
+  const generateCodeVerifier = () => {
+    const array = new Uint32Array(28);
+    window.crypto.getRandomValues(array);
+    return array
+      .map((dec) => dec.toString(36))
+      .join('')
+      .slice(0, 43); // Make sure the length is 43 characters
+  };
 
-    // Salesforce OAuth authorization URL
-    const authUrl = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+  // Function to generate the code challenge
+  const generateCodeChallenge = async (codeVerifier) => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    const base64String = btoa(String.fromCharCode(...new Uint8Array(hash)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, ''); // URL-safe Base64 encoding
+    return base64String;
+  };
+
+  const handleSalesforceAuth = async () => {
+    const clientId = '3MVG9dAEux2v1sLvXd6k01hOFrye_dr8gzZFOUArLnSl072UAcfIPYcAOakrrBQydLfMdwPFCEqdR4kD4azYw';
+    const redirectUri = 'https://ffa-form.netlify.app/oauth/callback';
+    
+    // Generate code_verifier and code_challenge
+    const codeVerifier = generateCodeVerifier();
+    const codeChallenge = await generateCodeChallenge(codeVerifier);
+    
+    // Save the code_verifier in sessionStorage to use it later in the callback
+    sessionStorage.setItem('code_verifier', codeVerifier);
+
+    // Salesforce OAuth authorization URL with code_challenge
+    const authUrl = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
     // Redirect the user to Salesforce for authentication
     window.location.href = authUrl;
   };
+
+
+
 
   const handleLogout = async () => {
     try {
