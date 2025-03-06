@@ -2,213 +2,221 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = ({ id, name, email, role, mode, setMode }) => {
-    const [userMode, setUserMode] = useState(mode);
-    const navigate = useNavigate();
-    const [user_name, setUserName] = useState(name);
-    const [salesforceStatus, setSalesforceStatus] = useState(null);  // To track Salesforce login status
-    const [authCode, setAuthCode] = useState(null);  // To store the Salesforce authorization code
+  const [userMode, setUserMode] = useState(mode);
+  const navigate = useNavigate();
+  const [user_name, setUserName] = useState(name);
 
-    const handleSalesforceAuth = () => {
-        const clientId = process.env.REACT_APP_SALESFORCE_CLIENT_ID;
-        const redirectUri = process.env.REACT_APP_SALESFORCE_REDIRECT_URI;
-        
-        // Salesforce OAuth authorization URL
-        const authUrl = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+  const handleSalesforceAuth = () => {
+    const clientId = process.env.REACT_APP_SALESFORCE_CLIENT_ID;
+    const redirectUri = process.env.REACT_APP_SALESFORCE_REDIRECT_URI;
 
-        // Redirect the user to Salesforce for authentication
-        window.location.href = authUrl;
-    };
+    // Salesforce OAuth authorization URL
+    const authUrl = `https://login.salesforce.com/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
 
-    useEffect(() => {
-        // Check if the Salesforce redirection contains the authorization code
-        const queryParams = new URLSearchParams(window.location.search);
-        const code = queryParams.get('code');
-        if (code) {
-            setAuthCode(code);
-            authenticateSalesforce(code); // Call function to authenticate using the code
-        }
-    }, []);
-    useEffect(() => {
-          console.log(authCode)
-      }, [authCode]);
+    // Redirect the user to Salesforce for authentication
+    window.location.href = authUrl;
+  };
 
-    const authenticateSalesforce = async (code) => {
-        try {
-            // Exchange the authorization code for an access token
-            const clientId = process.env.REACT_APP_SALESFORCE_CLIENT_ID;
-            const clientSecret = process.env.REACT_APP_SALESFORCE_CLIENT_SECRET;
-            const redirectUri = process.env.REACT_APP_SALESFORCE_REDIRECT_URI;
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("https://google-form-clone-wck5.onrender.com/logout", {
+        method: "POST",
+        credentials: "include", // Important: ensures cookies are included
+      });
 
-            const response = await fetch(`https://login.salesforce.com/services/oauth2/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    grant_type: 'authorization_code',
-                    code: code,
-                    client_id: clientId,
-                    client_secret: clientSecret,
-                    redirect_uri: redirectUri
-                })
-            });
+      if (response.status === 200) {
+        console.log("Logged out successfully");
+        // Redirect the user to the login page (or any other page)
+        navigate("/");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
-            if (response.ok) {
-                const data = await response.json();
-                setSalesforceStatus('Successfully authenticated with Salesforce!');  // Show success message
-                console.log("Salesforce Access Token:", data.access_token);  // You can store the token for later use
-            } else {
-                setSalesforceStatus('Failed to authenticate with Salesforce.');  // Show error message
-            }
-        } catch (error) {
-            setSalesforceStatus('Error occurred during Salesforce authentication.');  // Error handling
-            console.error("Salesforce authentication error:", error);
-        }
-    };
+  const removeAdmin = async (id) => {
+    await fetch(`https://google-form-clone-wck5.onrender.com/removeAdmin/${id}`, { method: "PUT" });
+    handleLogout();
+  };
 
-    const handleLogout = async () => {
-        try {
-            const response = await fetch('https://google-form-clone-wck5.onrender.com/logout', {
-                method: 'POST',
-                credentials: 'include',  // Important: ensures cookies are included
-            });
+  useEffect(() => {
+    document.body.className = userMode ? "dark-mode" : "light-mode";
+  }, [userMode]);
 
-            if (response.status === 200) {
-                console.log('Logged out successfully');
-                navigate('/');  // Redirect to the login page
-            } else {
-                console.error('Logout failed');
-            }
-        } catch (error) {
-            console.error('Error during logout:', error);
-        }
-    };
+  const toggleMode = async (newMode) => {
+    try {
+      setUserMode(newMode);
+      setMode(newMode);
 
-    const removeAdmin = async (id) => {
-        await fetch(`https://google-form-clone-wck5.onrender.com/removeAdmin/${id}`, { method: 'PUT' });
-        handleLogout();
-    };
+      const endpoint = newMode
+        ? `https://google-form-clone-wck5.onrender.com/updateModeDark/${id}`
+        : `https://google-form-clone-wck5.onrender.com/updateModeLight/${id}`;
 
-    useEffect(() => {
-        document.body.className = userMode ? "dark-mode" : "light-mode";
-    }, [userMode]);
+      const response = await fetch(endpoint, { method: "PUT" });
 
-    const toggleMode = async (newMode) => {
-        try {
-            setUserMode(newMode);
-            setMode(newMode);
+      if (!response.ok) {
+        throw new Error("Failed to update mode");
+      }
 
-            const endpoint = newMode
-                ? `https://google-form-clone-wck5.onrender.com/updateModeDark/${id}`
-                : `https://google-form-clone-wck5.onrender.com/updateModeLight/${id}`;
+      const data = await response.json();
+      console.log("Updated mode:", data);
+      setUserMode(data.mode);
+      setMode(data.mode);
+    } catch (error) {
+      console.error("Error updating mode:", error);
+      setUserMode(!newMode); // Revert UI if API fails
+      setMode(!newMode); // Revert AdminHome if API fails
+    }
+  };
 
-            const response = await fetch(endpoint, { method: "PUT" });
+  const updateName = async (event) => {
+    event.preventDefault(); // Prevent the default form submission
 
-            if (!response.ok) {
-                throw new Error("Failed to update mode");
-            }
+    const body = { id: id, user_name: user_name };
 
-            const data = await response.json();
-            console.log("Updated mode:", data);
-            setUserMode(data.mode);
-            setMode(data.mode);
-        } catch (error) {
-            console.error("Error updating mode:", error);
-            setUserMode(!newMode); // Revert UI if API fails
-            setMode(!newMode); // Revert AdminHome if API fails
-        }
-    };
+    const response = await fetch("https://google-form-clone-wck5.onrender.com/updateName", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-    const updateName = async () => {
-        const body = { id: id, user_name: user_name };
-        const response = await fetch('https://google-form-clone-wck5.onrender.com/updateName', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        });
+    if (response.ok) {
+      const data = await response.json();
+      setUserName(data.name);
+      sessionStorage.setItem("userName", data.name);
+    } else {
+      console.error("Failed to update name");
+    }
+  };
 
-        if (response.ok) {
-            const data = await response.json();
-            setUserName(data.name);
-            sessionStorage.setItem("userName", data.name);
-        }
-    };
+  return (
+    <div className="container mt-3">
+      <div className="row container d-flex justify-content-center">
+        <table
+          className="table table-striped table-bordered table-hover d-flex justify-content-center "
+          style={{ backgroundColor: "#f9ecf2" }}
+        >
+          <tbody>
+            <tr style={{ backgroundColor: "#f9ecf2" }}>
+              <td className="fw-bold">Name</td>
+              <td>{user_name}</td>
+              <td>
+                <button
+                  type="button"
+                  className="btn btn-outline-dark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editModal"
+                >
+                  <i className="fas fa-edit"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="fw-bold">Email</td>
+              <td className="text-truncate" style={{ maxWidth: "350px" }}>
+                {email}
+              </td>
+              <td>
+                <i className="fas fa-eye"></i>
+              </td>
+            </tr>
 
-    return (
-        <div className="container mt-3">
-            <div className="row container d-flex justify-content-center">
-                <table className="table table-striped table-bordered table-hover d-flex justify-content-center" style={{ backgroundColor: "#f9ecf2" }}>
-                    <tbody>
-                        <tr style={{ backgroundColor: "#f9ecf2" }}>
-                            <td className="fw-bold">Name</td>
-                            <td>{user_name}</td>
-                            <td><button type="button" className="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#editModal"><i className="fas fa-edit"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td className="fw-bold">Email</td>
-                            <td className="text-truncate" style={{ maxWidth: "350px" }}>{email}</td>
-                            <td><i className="fas fa-eye"></i></td>
-                        </tr>
-                        <tr>
-                            <td className="fw-bold">Role</td>
-                            <td>{role}</td>
-                            {role === "admin" && (<td><button className="btn btn-outline-dark w-80" onClick={() => removeAdmin(id)}><i className="fas fa-user-minus"></i></button></td>)}
-                            {role === "user" && (<td>-</td>)}
-                        </tr>
-                        <tr>
-                            <td className="fw-bold">Mode</td>
-                            <td>{userMode ? "dark" : "light"}</td>
-                            <td>
-                                <div className="form-check form-switch">
-                                    <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        id="flexSwitchCheckChecked1"
-                                        checked={userMode}
-                                        onChange={() => toggleMode(!userMode)}
-                                    />
-                                    <label className="form-check-label" htmlFor="flexSwitchCheckChecked1"></label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="fw-bold">Salesforce Link</td>
-                            <td><button className="btn btn-outline" onClick={handleSalesforceAuth}>Login with Salesforce</button></td>
-                            <td><i className="fas fa-eye"></i></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                {/* Edit Name Modal window */}
-                <div className="modal fade" id="editModal" tabIndex="-1" aria-labelledby="editModalLabel">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header" style={{ backgroundColor: "#C4B1AE" }}>
-                                <h5 className="modal-title" id="editModalLabel">Update your Name</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <form className="form-control" onSubmit={updateName}>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={user_name}
-                                        onChange={(e) => setUserName(e.target.value)}
-                                        placeholder="Edit your name"
-                                        required
-                                    />
-                                    <button type="submit" className="btn btn-outline-light" data-bs-dismiss="modal" style={{ backgroundColor: "#C4B1AE" }}>Update</button>
-                                </form>
-                                {salesforceStatus && (
-                                    <div className="alert alert-info mt-3">{salesforceStatus}</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+            <tr>
+              <td className="fw-bold">Role</td>
+              <td>{role}</td>
+              {role === "admin" && (
+                <td>
+                  <button
+                    className="btn btn-outline-dark w-80"
+                    onClick={() => removeAdmin(id)}
+                  >
+                    <i className="fas fa-user-minus"></i>
+                  </button>
+                </td>
+              )}
+              {role === "user" && <td>-</td>}
+            </tr>
+            <tr>
+              <td className="fw-bold">Mode</td>
+              <td>{userMode ? "dark" : "light"}</td>
+              <td>
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="flexSwitchCheckChecked1"
+                    checked={userMode}
+                    onChange={() => toggleMode(!userMode)}
+                  />
+                  <label className="form-check-label" htmlFor="flexSwitchCheckChecked1"></label>
                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td className="fw-bold">Salesforce Link</td>
+              <td>
+                <button className="btn btn-outline" onClick={handleSalesforceAuth}>
+                  Login with Salesforce
+                </button>
+              </td>
+              <td>
+                <i className="fas fa-eye"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Edit Name Modal window */}
+        <div
+          className="modal fade"
+          id="editModal"
+          tabIndex="-1"
+          aria-labelledby="editModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header" style={{ backgroundColor: "#C4B1AE" }}>
+                <h5 className="modal-title" id="editModalLabel">
+                  Update your Name
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <form className="form-control" onSubmit={updateName}>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={user_name}
+                    onChange={(e) => setUserName(e.target.value)}
+                    placeholder="Edit your name"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="btn btn-outline-light"
+                    data-bs-dismiss="modal"
+                    style={{ backgroundColor: "#C4B1AE" }}
+                  >
+                    Update
+                  </button>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Profile;
+
+
