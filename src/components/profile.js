@@ -218,5 +218,3 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
 };
 
 export default Profile;
-
-
