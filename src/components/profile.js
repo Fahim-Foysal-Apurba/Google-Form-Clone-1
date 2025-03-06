@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Function to generate a random string for code verifier
+const generateCodeVerifier = () => {
+    const array = new Uint32Array(56 / 2);
+    window.crypto.getRandomValues(array);
+    return array.map((n) => n.toString(16).padStart(2, '0')).join('');
+};
+
+// Function to generate the code challenge from the verifier
+const generateCodeChallenge = async (codeVerifier) => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    const base64url = btoa(String.fromCharCode.apply(null, new Uint8Array(digest)))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+    return base64url;
+};
+
 const Profile = ({ id, name, email, role, mode, setMode }) => {
   const [userMode, setUserMode] = useState(mode);
   const navigate = useNavigate();
   const [user_name, setUserName] = useState(name);
-
-  // Function to generate the code verifier
-  const generateCodeVerifier = () => {
-    const array = new Uint32Array(28);
-    window.crypto.getRandomValues(array);
-    return array
-      .map((dec) => dec.toString(36))
-      .join('')
-      .slice(0, 43); // Make sure the length is 43 characters
-  };
-
-  // Function to generate the code challenge
-  const generateCodeChallenge = async (codeVerifier) => {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(codeVerifier);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    const base64String = btoa(String.fromCharCode(...new Uint8Array(hash)))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, ''); // URL-safe Base64 encoding
-    return base64String;
-  };
 
   const handleSalesforceAuth = async () => {
     const clientId = '3MVG9dAEux2v1sLvXd6k01hOFrye_dr8gzZFOUArLnSl072UAcfIPYcAOakrrBQydLfMdwPFCEqdR4kD4azYw';
