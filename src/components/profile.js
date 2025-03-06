@@ -7,7 +7,7 @@ const Profile = ({ id, name, email, role, mode, setMode }) => {
   const [user_name, setUserName] = useState(name);
 
   const handleSalesforceAuth = () => {
-    const clientId = process.env.REACT_APP_SALESFORCE_CLIENT_ID;
+    const clientId = '3MVG9dAEux2v1sLvXd6k01hOFrye_dr8gzZFOUArLnSl072UAcfIPYcAOakrrBQydLfMdwPFCEqdR4kD4azYw'
     const redirectUri = 'https://ffa-form.netlify.app/callback'
 
     // Salesforce OAuth authorization URL
